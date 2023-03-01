@@ -17,7 +17,7 @@ namespace engine
 
         constexpr std::array<std::uint8_t, 184> to_array()
         {
-            std::array<std::uint8_t, 184> team_arr;
+            std::array<std::uint8_t, 184> team_arr{ 0 };
 
             using pokearr = std::array<std::uint8_t, 24>;
 
@@ -37,7 +37,7 @@ namespace engine
             std::copy_n(poke6.begin(), poke6.size(), team_arr.begin() + 120);
 
             // the active pokemon 145 - 176
-            std::copy_n(active_poke_array().begin(), active_poke_array().size(), team_arr.begin() + 144);
+            // 0 initialized
             // order              177 - 182
             std::copy_n(order.begin(), order.size(), team_arr.begin() + 176);
             // last selected move 182 - 183
@@ -46,35 +46,6 @@ namespace engine
             team_arr[183] = 0;
 
             return team_arr;
-        }
-
-        constexpr std::array<std::uint8_t, 32> active_poke_array()
-        {
-            std::array<std::uint8_t, 32> active_poke_arr{ 0 };
-
-            active_poke_arr[0]  = member[0].stats_hp;
-            active_poke_arr[1]  = member[0].stats_hp >> 8;
-            active_poke_arr[2]  = member[0].stats_atk;
-            active_poke_arr[3]  = member[0].stats_atk >> 8;
-            active_poke_arr[4]  = member[0].stats_def;
-            active_poke_arr[5]  = member[0].stats_def >> 8;
-            active_poke_arr[6]  = member[0].stats_spe;
-            active_poke_arr[7]  = member[0].stats_spe >> 8;
-            active_poke_arr[8]  = member[0].stats_spec;
-            active_poke_arr[9]  = member[0].stats_spec >> 8;
-            active_poke_arr[10] = member[0].species;
-            active_poke_arr[11] = member[0].types;
-            // 12 - 23 boosts and volatiles are 0
-            active_poke_arr[24] = member[0].move_0_id;
-            active_poke_arr[25] = member[0].move_0_pp;
-            active_poke_arr[26] = member[0].move_1_id;
-            active_poke_arr[27] = member[0].move_1_pp;
-            active_poke_arr[28] = member[0].move_2_id;
-            active_poke_arr[29] = member[0].move_2_pp;
-            active_poke_arr[30] = member[0].move_3_id;
-            active_poke_arr[31] = member[0].move_3_pp;
-
-            return active_poke_arr;
         }
 
         // 0 - 144

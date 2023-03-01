@@ -35,15 +35,15 @@ int main(int argc, char **argv)
 
    for(int i = 0; i < 1; ++i)
    {
+      constexpr long seed = 0x2313;
       // We could use C's srand() and rand() function but for point of example
       // we will demonstrate how to use the PSRNG that is exposed by libpkmn
       pkmn_psrng random;
-      pkmn_psrng_init(&random, 2000);
+      pkmn_psrng_init(&random, seed);
       // Preallocate a small buffer for the choice options throughout the battle
       pkmn_choice options[PKMN_OPTIONS_SIZE];
 
-      pkmn_gen1_battle battle;
-      std::copy(engine::RBY::testBattle.begin(), engine::RBY::testBattle.end(), battle.bytes);
+      pkmn_gen1_battle battle = engine::RBY::testBattle;
 
       // "DEBUG"
       // int asdf = 0;

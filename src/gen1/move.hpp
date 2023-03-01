@@ -6,6 +6,15 @@ namespace engine
 {
 namespace RBY
 {
+    /*
+39
+f
+3b
+5
+56
+14
+69
+14*/
     enum Move : std::uint8_t
     {
         None,

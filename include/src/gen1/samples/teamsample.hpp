@@ -3,6 +3,11 @@
 #include "pokesample.hpp"
 #include "team_rby.hpp"
 
+/*
+* Sample compiletime Team objects to pass into battles
+*
+*/
+
 namespace engine
 {
 namespace RBY

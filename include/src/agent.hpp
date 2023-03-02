@@ -8,8 +8,8 @@
 namespace engine
 {
     template<Gen gen, typename GameState>
-    struct Agent<gen>
+    struct Agent
     {
         virtual void make_choice(GameState state) = 0;
-    }
+    };
 }

@@ -3,6 +3,11 @@
 #include "teamsample.hpp"
 #include "battle_rby.hpp"
 
+/*
+* Sample compiletime Battles to play around with
+*
+*/
+
 namespace engine
 {
 namespace RBY

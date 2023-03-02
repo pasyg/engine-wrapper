@@ -1,13 +1,7 @@
-#include <assert.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "battlesample.hpp"
+#include "engine-wrapper.hpp"
 
 int main(int argc, char **argv)
 {
-
    for(int i = 0; i < 1000000; ++i)
    {
       using namespace engine::RBY;
@@ -16,7 +10,7 @@ int main(int argc, char **argv)
 
       pkmn_result result = battle.play_battle();
 
-      print_result(battle.battle_, result);
+      //print_result(battle.battle_, result);
    }
    return 0;
 }

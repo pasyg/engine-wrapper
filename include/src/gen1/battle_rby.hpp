@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cassert>
+#include <iostream>
+
 #include "pkmn.h"
 
 #include "team_rby.hpp"
@@ -168,19 +171,19 @@ namespace RBY
         //The result is from the perspective of P1
         switch (pkmn_result_type(result)) {
             case PKMN_RESULT_WIN: {
-                printf("Battle won by Player A after %d turns\n", turns);
+                std::cout << "Battle won by Player A after " << turns << "turns\n";
                 break;
             }
             case PKMN_RESULT_LOSE: {
-                printf("Battle won by Player B after %d turns\n", turns);
+                std::cout << "Battle won by Player B after " << turns << "turns\n";
                 break;
             }
             case PKMN_RESULT_TIE: {
-                printf("Battle ended in a tie after %d turns\n", turns);
+                std::cout << "Battle ended in a tie after " << turns << "turns\n";
                 break;
             }
             case PKMN_RESULT_ERROR: {
-                printf("Battle encountered an error after %d turns\n", turns);
+                std::cout << "Battle encountered an error after " << turns << "turns\n";
                 break;
             }
             default: assert(false);

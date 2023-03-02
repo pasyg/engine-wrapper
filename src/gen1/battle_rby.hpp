@@ -107,7 +107,7 @@ namespace RBY
         }
     };
 
-    static constexpr rby_team team1(pkmn_gen1_battle& state)
+    inline constexpr rby_team team1(pkmn_gen1_battle& state)
     {
         rby_team team;
         auto iter = std::begin(state.bytes);
@@ -117,7 +117,7 @@ namespace RBY
         return team;
     }
 
-    static constexpr rby_active active1(pkmn_gen1_battle& state)
+    inline constexpr rby_active active1(pkmn_gen1_battle& state)
     {
         rby_active active;
         auto team = team1(state);
@@ -127,7 +127,7 @@ namespace RBY
         return active;
     }
 
-    static constexpr rby_team team2(pkmn_gen1_battle& state)
+    inline constexpr rby_team team2(pkmn_gen1_battle& state)
     {
         rby_team team;
         auto iter = std::begin(state.bytes);
@@ -137,7 +137,7 @@ namespace RBY
         return team;
     }
 
-    static constexpr rby_active active2(pkmn_gen1_battle& state)
+    inline constexpr rby_active active2(pkmn_gen1_battle& state)
     {
         rby_active active;
         auto team = team2(state);
@@ -147,7 +147,7 @@ namespace RBY
         return active;
     }
 
-    static constexpr std::uint16_t turn(pkmn_gen1_battle& state)
+    inline constexpr std::uint16_t turn(pkmn_gen1_battle& state)
     {
         std::uint16_t turn = state.bytes[369];
         turn << 8;
@@ -156,7 +156,7 @@ namespace RBY
         return turn;
     }
 
-    static void print_result(pkmn_gen1_battle& battle, pkmn_result result)
+    inline void print_result(pkmn_gen1_battle& battle, pkmn_result result)
     {
         // The battle is written in native endianness so we need to do a bit-hack to
         // figure out the system's endianess before we can read the 16-bit turn data

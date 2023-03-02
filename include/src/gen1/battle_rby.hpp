@@ -171,19 +171,19 @@ namespace RBY
         //The result is from the perspective of P1
         switch (pkmn_result_type(result)) {
             case PKMN_RESULT_WIN: {
-                std::cout << "Battle won by Player A after " << turns << "turns\n";
+                std::cout << "Battle won by Player A after " << turns << " turns\n";
                 break;
             }
             case PKMN_RESULT_LOSE: {
-                std::cout << "Battle won by Player B after " << turns << "turns\n";
+                std::cout << "Battle won by Player B after " << turns << " turns\n";
                 break;
             }
             case PKMN_RESULT_TIE: {
-                std::cout << "Battle ended in a tie after " << turns << "turns\n";
+                std::cout << "Battle ended in a tie after " << turns << " turns\n";
                 break;
             }
             case PKMN_RESULT_ERROR: {
-                std::cout << "Battle encountered an error after " << turns << "turns\n";
+                std::cout << "Battle encountered an error after " << turns << " turns\n";
                 break;
             }
             default: assert(false);

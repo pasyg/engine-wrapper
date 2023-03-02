@@ -2,15 +2,14 @@
 
 int main(int argc, char **argv)
 {
-   for(int i = 0; i < 1000000; ++i)
-   {
-      using namespace engine::RBY;
+   // full scope resolution for sake of illustration
+   // using namespace engine::RBY;
 
-      auto battle = testBattle;
+   auto battle = engine::RBY::testBattle;
 
-      pkmn_result result = battle.play_battle();
+   pkmn_result result = battle.play_battle();
 
-      //print_result(battle.battle_, result);
-   }
+   engine::RBY::print_result(battle.battle_, result);
+
    return 0;
 }

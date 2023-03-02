@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base_stats.hpp"
 #include "pokemon.hpp"
 #include "move.hpp"
 #include "species.hpp"
@@ -16,6 +17,7 @@ namespace engine
             level     = p_level;
 
             std::array<uint8_t, 2> tmp = RBY::get_type(p_species);
+
             types     = tmp[0];
             types << 4;
             types     = types & tmp[1];
@@ -35,12 +37,37 @@ namespace engine
         // hp is calculated differently than the other stats
         constexpr void calc_stats()
         {
-            // TODO
-            stats_hp   = 100;
-            stats_atk  = 100;
-            stats_def  = 100;
-            stats_spec = 100;
-            stats_spe  = 100;
+            std::array<std::uint16_t, 6> base = get_base_stats(species);
+
+            stats_hp   = calc_hp(base[0]);
+            stats_atk  = calc_other_stat(base[1], 1);
+            stats_def  = calc_other_stat(base[2], 2);
+            stats_spec = calc_other_stat(base[3], 3);
+            stats_spe  = calc_other_stat(base[5], 5);
+        }
+
+        constexpr std::uint16_t calc_hp(std::uint16_t base)
+        {
+            std::uint16_t hp = base + IV[0];
+            hp *= 2;
+            hp += EV[0];
+            hp *= level;
+            hp /= 100;
+            hp += level + 10;
+
+            return hp;
+        }
+
+        constexpr std::uint16_t calc_other_stat(std::uint16_t base, int statNr)
+        {
+            std::uint16_t stat = base + IV[statNr];
+            stat *= 2;
+            stat += EV[statNr];
+            stat *= level;
+            stat /= 100;
+            stat += 5;
+
+            return stat;
         }
 
         constexpr std::array<std::uint8_t, 24> to_array()
@@ -74,9 +101,11 @@ namespace engine
 
             return poke_arr;
         }
+        // for computation
+        std::array<std::uint16_t, 6> base{ };
         // Assuming max EV and IV for now
-        std::array<int, 5> EV{ 63 };
-        std::array<int, 5> IV{ 15 };
+        std::array<int, 6> EV{ 63 };
+        std::array<int, 6> IV{ 15 };
         // Pokemon stats
         std::uint16_t stats_hp    = 0;
         std::uint16_t stats_atk   = 0;

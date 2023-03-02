@@ -7,10 +7,16 @@
 
 namespace engine
 {
+namespace RBY
+{
+    template<Gen gen>
+    struct Team;
+    
+    using rby_team = std::array<std::uint8_t, 184>;
+    
     template<>
     struct Team<Gen::RBY>
     {
-        using rby_team = std::array<std::uint8_t, 184>;
         
         constexpr Team(std::array<Pokemon<Gen::RBY>, 6> pmember) : 
             member(pmember){};
@@ -53,4 +59,5 @@ namespace engine
         // 177 - 182
         std::array<std::uint8_t, 6> order = { 1, 2, 3, 4, 5, 6 };
     };
+} // namespace RBY
 } // namespace engine

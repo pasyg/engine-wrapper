@@ -7,6 +7,6 @@ namespace engine
 {
 namespace RBY
 {
-    static constexpr pkmn_gen1_battle testBattle = battle::make_battle(miedon, miedon, 25);
+    static constexpr Battle<Gen::RBY> testBattle = Battle<Gen::RBY>(miedon, miedon, 236);
 } // namespace RBY
 } // namespace engine

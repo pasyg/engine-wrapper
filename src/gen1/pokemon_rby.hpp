@@ -8,6 +8,11 @@
 
 namespace engine
 {
+namespace RBY
+{
+    template<Gen gen>
+    struct Pokemon;
+    
     template<>
     struct Pokemon<Gen::RBY>
     {
@@ -129,4 +134,5 @@ namespace engine
         std::uint8_t types        = 0;
         std::uint8_t level        = 0;
     };
+} // namespace RBY
 } // namespace engine

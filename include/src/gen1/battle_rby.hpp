@@ -34,9 +34,9 @@ namespace RBY
         // max log size
         static const size_t size = 180;
         // trace buffer
-        std::array<std::uint8_t, size> buf{ 0 };
+        std::array<std::uint8_t, size> buf{ };
         // choice options
-        std::array<pkmn_choice, 9> options{ 0 };
+        std::array<pkmn_choice, 9> options{ };
 
         Battle() = delete;
         constexpr Battle(Team<Gen::RBY> team1, Team<Gen::RBY> team2, std::uint64_t seed)

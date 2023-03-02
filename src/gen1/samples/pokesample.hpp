@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pokemonRBY.hpp"
+#include "pokemon_rby.hpp"
 
 namespace engine
 {

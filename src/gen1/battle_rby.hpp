@@ -3,7 +3,7 @@
 #include "pkmn.h"
 
 #include "battle.hpp"
-#include "teamRBY.hpp"
+#include "team_rby.hpp"
 
 namespace engine
 {

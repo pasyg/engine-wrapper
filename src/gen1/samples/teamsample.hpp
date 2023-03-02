@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pokesample.hpp"
-#include "teamRBY.hpp"
+#include "team_rby.hpp"
 
 namespace engine
 {

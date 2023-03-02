@@ -8,7 +8,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "battleRBY.hpp"
+#include "battle_rby.hpp"
 
 #include "battlesample.hpp"
 
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
    for(int i = 0; i < 1; ++i)
    {
-      constexpr long seed = 0x2313;
+      constexpr long seed = 0x2813;
       // We could use C's srand() and rand() function but for point of example
       // we will demonstrate how to use the PSRNG that is exposed by libpkmn
       pkmn_psrng random;

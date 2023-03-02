@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "team.hpp"
-#include "pokemonRBY.hpp"
+#include "pokemon_rby.hpp"
 
 namespace engine
 {

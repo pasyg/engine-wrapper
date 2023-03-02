@@ -6,7 +6,7 @@
 
 namespace engine
 {
-    constexpr std::array<int, 6> get_base_stats(RBY::Species const species)
+    constexpr std::array<std::uint16_t, 6> get_base_stats(std::uint8_t species)
     {
         switch (species)
         {

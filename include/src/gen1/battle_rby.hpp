@@ -8,6 +8,8 @@
 #include <cassert>
 #include <iostream>
 
+#include "arrayslice.hpp"
+
 #include "pkmn.h"
 
 #include "team_rby.hpp"
@@ -16,27 +18,8 @@ namespace engine
 {
 namespace RBY
 {
-    template<typename Iter>
-    struct ArraySlice
-    {
-        Iter first;
-        Iter last;
-        constexpr Iter begin()
-        {
-            return first;
-        }
-        constexpr Iter end()
-        {
-            return last;
-        }
-    };
     template<Gen gen>
     struct Battle;
-
-    using rby_battle = std::array<std::uint8_t, 384>;
-    using rby_team   = std::array<std::uint8_t, 184>;
-    using rby_mon    = std::array<std::uint8_t, 24>;
-    using rby_active = std::array<std::uint8_t, 32>;
 
     template<>
     struct Battle<Gen::RBY>
@@ -53,27 +36,24 @@ namespace RBY
         // max log size
         static const size_t size = 180;
         // trace buffer
-        std::array<std::uint8_t, size> buf{ };
+        std::array<std::uint8_t, size> buf{ 0 };
         // choice options
-        std::array<pkmn_choice, 9> options{ };
+        std::array<pkmn_choice, 9> options{ 0 };
 
-        Battle() = delete;
         constexpr Battle(Team<Gen::RBY> team1, Team<Gen::RBY> team2, std::uint64_t seed)
         : seed(seed)
         {
-            rby_team   team_1_arr = team1.to_array();
-            rby_team   team_2_arr = team2.to_array();
-
-            std::copy_n(team_1_arr.begin(), team_1_arr.size(), std::begin(battle_.bytes));
-            std::copy_n(team_2_arr.begin(), team_2_arr.size(), std::begin(battle_.bytes) + 184);
+            std::copy_n(team1.begin(), team1.size(), std::begin(battle_.bytes));
+            std::copy_n(team2.begin(), team2.size(), std::begin(battle_.bytes) + 184);
 
             // turn
+            battle_.bytes[368] = 0;
             battle_.bytes[369] = 0;
-            battle_.bytes[370] = 0;
             // last_damage
+            battle_.bytes[370] = 0;
             battle_.bytes[371] = 0;
-            battle_.bytes[372] = 0;
             // last_selected_indexes
+            battle_.bytes[372] = 0;
             battle_.bytes[373] = 0;
             battle_.bytes[374] = 0;
             battle_.bytes[375] = 0;

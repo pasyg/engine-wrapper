@@ -17,6 +17,7 @@ namespace RBY
 {
     enum Species : std::uint8_t 
     {
+        None,
         Bulbasaur,
         Ivysaur,
         Venusaur,

@@ -20,6 +20,9 @@ namespace RBY
     template<>
     struct Team<Gen::RBY>
     {
+        // Array that stores all the information of one Team
+        std::array<std::uint8_t, 184> bytes{ 0 };
+
         constexpr Team(const std::array<Pokemon<Gen::RBY>, 6>& pmember)
         {
             for(int i = 0; i < 24; ++i)
@@ -40,7 +43,20 @@ namespace RBY
             bytes[181] = 6;
         };
 
-        std::array<std::uint8_t, 184> bytes{ 0 };
+        constexpr auto begin() 
+        { 
+            return bytes.begin(); 
+        }
+
+        constexpr auto end()
+        {
+            return bytes.end();
+        }
+
+        constexpr auto size()
+        {
+            return bytes.size();
+        }
     };
 } // namespace RBY
 } // namespace engine

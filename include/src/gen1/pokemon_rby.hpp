@@ -1,6 +1,9 @@
-#pragma once
+// Copyright pasyg.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#include <bit>
+#pragma once
 
 #include "base_stats.hpp"
 #include "pokemon.hpp"
@@ -17,18 +20,22 @@ namespace RBY
         
     inline constexpr std::uint16_t calc_other_stat(Pokemon<Gen::RBY>& poke, Stat stat_);
     inline constexpr std::uint16_t calc_hp(Pokemon<Gen::RBY>& poke);
+
     template<>
     struct Pokemon<Gen::RBY>
     {
-        Pokemon() = delete;
+        // Array that stores all the information of one Pokemon
+        std::array<std::uint8_t, 24> bytes{ };
+
         constexpr Pokemon(RBY::Species p_species, std::array<RBY::Move, 4> p_moves, int p_level=100)
         {
+            bytes[20]   = 0; // status
             bytes[21]   = p_species;
             bytes[23]   = p_level;
             
             base = get_base_stats(bytes[21]);
 
-            bytes[22] = (RBY::get_type(p_species)[0] << 4) & RBY::get_type(p_species)[1];
+            bytes[22] = RBY::get_type(p_species)[0] | (RBY::get_type(p_species)[1] << 4);
 
             bytes[10] = p_moves[0];
             bytes[11] = RBY::move_pp(p_moves[0]);
@@ -53,19 +60,32 @@ namespace RBY
             bytes[3]  = calc_other_stat(*this, ATK) >> 8;
             bytes[4]  = calc_other_stat(*this, DEF);
             bytes[5]  = calc_other_stat(*this, DEF) >> 8;
-            bytes[6]  = calc_other_stat(*this, SPC);
-            bytes[7]  = calc_other_stat(*this, SPC) >> 8;
-            bytes[8]  = calc_other_stat(*this, SPE);
-            bytes[9]  = calc_other_stat(*this, SPE) >> 8;
+            bytes[6]  = calc_other_stat(*this, SPE);
+            bytes[7]  = calc_other_stat(*this, SPE) >> 8;
+            bytes[8]  = calc_other_stat(*this, SPC);
+            bytes[9]  = calc_other_stat(*this, SPC) >> 8;
         }
 
-        // array for all of the pokemons information
-        std::array<std::uint8_t, 24> bytes{ };
+        constexpr auto begin()
+        {
+            return bytes.begin();
+        }
+
+        constexpr auto end()
+        {
+            return bytes.end();
+        }
+
+        constexpr auto size()
+        {
+            return bytes.size();
+        }
+
         // for computation
         std::array<std::uint16_t, 6> base{ };
         // Assuming max EV and IV for now
-        std::array<int, 6> EV{ 63 };
-        std::array<int, 6> IV{ 15 };
+        std::array<int, 6> EV{ 63, 63, 63, 63, 63, 63 };
+        std::array<int, 6> IV{ 15, 15, 15, 15, 15, 15 };
     };
 
     inline constexpr std::uint16_t calc_hp(Pokemon<Gen::RBY>& poke)

@@ -6,7 +6,7 @@ int main(int argc, char **argv)
    // using namespace engine::RBY;
 
    auto battle = engine::RBY::testBattle;
-
+   
    pkmn_result result = battle.play_battle();
 
    engine::RBY::print_result(battle.battle_, result);

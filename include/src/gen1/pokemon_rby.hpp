@@ -14,10 +14,13 @@ namespace RBY
 {
     template<Gen gen>
     struct Pokemon;
-    
+        
+    inline constexpr std::uint16_t calc_other_stat(Pokemon<Gen::RBY>& poke, Stat stat_);
+    inline constexpr std::uint16_t calc_hp(Pokemon<Gen::RBY>& poke);
     template<>
     struct Pokemon<Gen::RBY>
     {
+        Pokemon() = delete;
         constexpr Pokemon(RBY::Species p_species, std::array<RBY::Move, 4> p_moves, int p_level=100)
         {
             bytes[21]   = p_species;
@@ -25,8 +28,7 @@ namespace RBY
             
             base = get_base_stats(bytes[21]);
 
-            bytes[22] = RBY::get_type(p_species)[0];
-            bytes[22] = bytes[22] << 4 & RBY::get_type(p_species)[1];
+            bytes[22] = (RBY::get_type(p_species)[0] << 4) & RBY::get_type(p_species)[1];
 
             bytes[10] = p_moves[0];
             bytes[11] = RBY::move_pp(p_moves[0]);
@@ -43,16 +45,18 @@ namespace RBY
         // hp is calculated differently than the other stats
         constexpr void calc_stats()
         {
-            bytes[0] = calc_hp(*this) >> 8;
-            bytes[1] = calc_hp(*this);
-            bytes[2] = calc_other_stat(*this, ATK) >> 8;
-            bytes[3] = calc_other_stat(*this, ATK);
-            bytes[4] = calc_other_stat(*this, DEF) >> 8;
-            bytes[5] = calc_other_stat(*this, DEF);
-            bytes[6] = calc_other_stat(*this, SPC) >> 8;
-            bytes[7] = calc_other_stat(*this, SPC);
-            bytes[8] = calc_other_stat(*this, SPE) >> 8;
-            bytes[9] = calc_other_stat(*this, SPE);
+            bytes[0]  = calc_hp(*this);
+            bytes[1]  = calc_hp(*this) >> 8;
+            bytes[18] = bytes[0];
+            bytes[19] = bytes[1];
+            bytes[2]  = calc_other_stat(*this, ATK);
+            bytes[3]  = calc_other_stat(*this, ATK) >> 8;
+            bytes[4]  = calc_other_stat(*this, DEF);
+            bytes[5]  = calc_other_stat(*this, DEF) >> 8;
+            bytes[6]  = calc_other_stat(*this, SPC);
+            bytes[7]  = calc_other_stat(*this, SPC) >> 8;
+            bytes[8]  = calc_other_stat(*this, SPE);
+            bytes[9]  = calc_other_stat(*this, SPE) >> 8;
         }
 
         // array for all of the pokemons information

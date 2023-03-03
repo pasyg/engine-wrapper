@@ -16,6 +16,20 @@ namespace engine
 {
 namespace RBY
 {
+    template<typename Iter>
+    struct ArraySlice
+    {
+        Iter first;
+        Iter last;
+        constexpr Iter begin()
+        {
+            return first;
+        }
+        constexpr Iter end()
+        {
+            return last;
+        }
+    };
     template<Gen gen>
     struct Battle;
 
@@ -119,53 +133,47 @@ namespace RBY
         }
     };
 
-    inline constexpr rby_team team1(pkmn_gen1_battle& state)
+    using Slice = ArraySlice<std::uint8_t*>;
+
+    inline constexpr Slice team1(pkmn_gen1_battle& state)
     {
-        rby_team team;
-        auto iter = std::begin(state.bytes);
-        
-        std::copy(iter, iter + 184, team.begin());
+        Slice team;
+        team.first = state.bytes;
+        team.last  = state.bytes + 184;
 
         return team;
     }
 
-    inline constexpr rby_active active1(pkmn_gen1_battle& state)
+    inline constexpr Slice active1(pkmn_gen1_battle& state)
     {
-        rby_active active;
-        auto team = team1(state);
-
-        std::copy(team.begin() + 144, team.begin() + 176, active.begin());
+        Slice active;
+        active.first = state.bytes + 144;
+        active.last  = state.bytes + 176;
 
         return active;
     }
 
-    inline constexpr rby_team team2(pkmn_gen1_battle& state)
+    inline constexpr Slice team2(pkmn_gen1_battle& state)
     {
-        rby_team team;
-        auto iter = std::begin(state.bytes);
-
-        std::copy(iter + 184, iter + 368, team.begin());
+        Slice team;
+        team.first = state.bytes + 184;
+        team.last  = state.bytes + 368;
 
         return team;
     }
 
-    inline constexpr rby_active active2(pkmn_gen1_battle& state)
+    inline constexpr Slice active2(pkmn_gen1_battle& state)
     {
-        rby_active active;
-        auto team = team2(state);
-
-        std::copy(team.begin() + 144, team.begin() + 176, active.begin());
+        Slice active;
+        active.first = state.bytes + 328;
+        active.last  = state.bytes + 360;
 
         return active;
     }
-
+    
     inline constexpr std::uint16_t turn(pkmn_gen1_battle& state)
     {
-        std::uint16_t turn = state.bytes[369];
-        turn << 8;
-        turn = turn & state.bytes[368];
-
-        return turn;
+        return *(reinterpret_cast<std::uint16_t*>(state.bytes + 368));
     }
 
     inline void print_result(pkmn_gen1_battle& battle, pkmn_result result)

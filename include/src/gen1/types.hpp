@@ -33,7 +33,7 @@ namespace RBY
         Dragon,
     };
     
-    constexpr std::array<uint8_t, 2> get_type(Species species)
+    inline constexpr std::array<uint8_t, 2> get_type(Species species)
     {
         switch(species)
         {

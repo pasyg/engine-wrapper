@@ -11,6 +11,16 @@
 
 namespace engine
 {
+    // skip special defense, due to reusability reasons.
+    enum Stat : uint8_t
+    {
+        HP   = 0,
+        ATK  = 1,
+        DEF  = 2,
+        SPC  = 3,
+        SPE  = 5,
+    };
+
     constexpr std::array<std::uint16_t, 6> get_base_stats(std::uint8_t species)
     {
         switch (species)

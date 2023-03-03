@@ -1,9 +1,6 @@
-// Copyright pasyg.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
 #pragma once
+
+#include <bit>
 
 #include "base_stats.hpp"
 #include "pokemon.hpp"
@@ -23,23 +20,22 @@ namespace RBY
     {
         constexpr Pokemon(RBY::Species p_species, std::array<RBY::Move, 4> p_moves, int p_level=100)
         {
-            species   = p_species;
-            level     = p_level;
+            bytes[21]   = p_species;
+            bytes[23]   = p_level;
+            
+            base = get_base_stats(bytes[21]);
 
-            std::array<uint8_t, 2> tmp = RBY::get_type(p_species);
+            bytes[22] = RBY::get_type(p_species)[0];
+            bytes[22] = bytes[22] << 4 & RBY::get_type(p_species)[1];
 
-            types     = tmp[0];
-            types << 4;
-            types     = types & tmp[1];
-
-            move_0_id = p_moves[0];
-            move_0_pp = RBY::move_pp(p_moves[0]);
-            move_1_id = p_moves[1];
-            move_1_pp = RBY::move_pp(p_moves[1]);
-            move_2_id = p_moves[2];
-            move_2_pp = RBY::move_pp(p_moves[2]);
-            move_3_id = p_moves[3];
-            move_3_pp = RBY::move_pp(p_moves[3]);
+            bytes[10] = p_moves[0];
+            bytes[11] = RBY::move_pp(p_moves[0]);
+            bytes[12] = p_moves[1];
+            bytes[13] = RBY::move_pp(p_moves[1]);
+            bytes[14] = p_moves[2];
+            bytes[15] = RBY::move_pp(p_moves[2]);
+            bytes[16] = p_moves[3];
+            bytes[17] = RBY::move_pp(p_moves[3]);
 
             calc_stats();
         }
@@ -47,97 +43,51 @@ namespace RBY
         // hp is calculated differently than the other stats
         constexpr void calc_stats()
         {
-            std::array<std::uint16_t, 6> base = get_base_stats(species);
-
-            stats_hp   = calc_hp(base[0]);
-            stats_atk  = calc_other_stat(base[1], 1);
-            stats_def  = calc_other_stat(base[2], 2);
-            stats_spec = calc_other_stat(base[3], 3);
-            stats_spe  = calc_other_stat(base[5], 5);
+            bytes[0] = calc_hp(*this) >> 8;
+            bytes[1] = calc_hp(*this);
+            bytes[2] = calc_other_stat(*this, ATK) >> 8;
+            bytes[3] = calc_other_stat(*this, ATK);
+            bytes[4] = calc_other_stat(*this, DEF) >> 8;
+            bytes[5] = calc_other_stat(*this, DEF);
+            bytes[6] = calc_other_stat(*this, SPC) >> 8;
+            bytes[7] = calc_other_stat(*this, SPC);
+            bytes[8] = calc_other_stat(*this, SPE) >> 8;
+            bytes[9] = calc_other_stat(*this, SPE);
         }
 
-        constexpr std::uint16_t calc_hp(std::uint16_t base)
-        {
-            std::uint16_t hp = base + IV[0];
-            hp *= 2;
-            hp += EV[0];
-            hp *= level;
-            hp /= 100;
-            hp += level + 10;
-
-            return hp;
-        }
-
-        constexpr std::uint16_t calc_other_stat(std::uint16_t base, int statNr)
-        {
-            std::uint16_t stat = base + IV[statNr];
-            stat *= 2;
-            stat += EV[statNr];
-            stat *= level;
-            stat /= 100;
-            stat += 5;
-
-            return stat;
-        }
-
-        constexpr std::array<std::uint8_t, 24> to_array()
-        {
-            std::array<std::uint8_t, 24> poke_arr;
-
-            poke_arr[0]  = stats_hp;
-            poke_arr[1]  = stats_hp >> 8;
-            poke_arr[2]  = stats_atk;
-            poke_arr[3]  = stats_atk >> 8;
-            poke_arr[4]  = stats_def;
-            poke_arr[5]  = stats_def >> 8;
-            poke_arr[6]  = stats_spe;
-            poke_arr[7]  = stats_spe >> 8;
-            poke_arr[8]  = stats_spec;
-            poke_arr[9]  = stats_spec >> 8;
-            poke_arr[10] = move_0_id;
-            poke_arr[11] = move_0_pp;
-            poke_arr[12] = move_1_id;
-            poke_arr[13] = move_1_pp;
-            poke_arr[14] = move_2_id;
-            poke_arr[15] = move_2_pp;
-            poke_arr[16] = move_3_id;
-            poke_arr[17] = move_3_pp;
-            poke_arr[18] = poke_arr[0];
-            poke_arr[19] = poke_arr[1];
-            poke_arr[20] = 0;
-            poke_arr[21] = species;
-            poke_arr[22] = types;
-            poke_arr[23] = level;
-
-            return poke_arr;
-        }
+        // array for all of the pokemons information
+        std::array<std::uint8_t, 24> bytes{ };
         // for computation
         std::array<std::uint16_t, 6> base{ };
         // Assuming max EV and IV for now
         std::array<int, 6> EV{ 63 };
         std::array<int, 6> IV{ 15 };
-        // Pokemon stats
-        std::uint16_t stats_hp    = 0;
-        std::uint16_t stats_atk   = 0;
-        std::uint16_t stats_def   = 0;
-        std::uint16_t stats_spec  = 0;
-        std::uint16_t stats_spe   = 0;
-        // Moves
-        std::uint8_t move_0_id    = 0;
-        std::uint8_t move_0_pp    = 0;
-        std::uint8_t move_1_id    = 0;
-        std::uint8_t move_1_pp    = 0;
-        std::uint8_t move_2_id    = 0;
-        std::uint8_t move_2_pp    = 0;
-        std::uint8_t move_3_id    = 0;
-        std::uint8_t move_3_pp    = 0;
-        // Game relevant
-        std::uint16_t current_hp  = 0;
-        std::uint8_t status       = 0;
-        // misc
-        std::uint8_t species      = 0;
-        std::uint8_t types        = 0;
-        std::uint8_t level        = 0;
     };
+
+    inline constexpr std::uint16_t calc_hp(Pokemon<Gen::RBY>& poke)
+    {
+        std::uint16_t hp = poke.base[0] + poke.IV[0];
+        hp *= 2;
+        hp += poke.EV[0];
+        // multiply by level
+        hp *= poke.bytes[23];
+        hp /= 100;
+        hp += poke.bytes[23] + 10;
+
+        return hp;
+    }
+
+    inline constexpr std::uint16_t calc_other_stat(Pokemon<Gen::RBY>& poke, Stat stat_)
+    {
+        std::uint16_t stat = poke.base[stat_] + poke.IV[stat_];
+        stat *= 2;
+        stat += poke.EV[stat_];
+        // multiply by level
+        stat *= poke.bytes[23];
+        stat /= 100;
+        stat += 5;
+
+        return stat;
+    }
 } // namespace RBY
 } // namespace engine

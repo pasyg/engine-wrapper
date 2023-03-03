@@ -53,10 +53,16 @@ namespace RBY
             std::copy_n(team_1_arr.begin(), team_1_arr.size(), std::begin(battle_.bytes));
             std::copy_n(team_2_arr.begin(), team_2_arr.size(), std::begin(battle_.bytes) + 184);
 
-            // TODO fill with all values
-
+            // turn
+            battle_.bytes[369] = 0;
+            battle_.bytes[370] = 0;
+            // last_damage
+            battle_.bytes[371] = 0;
+            battle_.bytes[372] = 0;
             // last_selected_indexes
-            battle_.bytes[375] = 1;
+            battle_.bytes[373] = 0;
+            battle_.bytes[374] = 0;
+            battle_.bytes[375] = 0;
 
             for(int i = 0; i < 8; ++i)
             {

@@ -1,3 +1,8 @@
+// Copyright pasyg.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
 #pragma once
 
 #include <cassert>
@@ -42,23 +47,21 @@ namespace RBY
         constexpr Battle(Team<Gen::RBY> team1, Team<Gen::RBY> team2, std::uint64_t seed)
         : seed(seed)
         {
-            rby_battle battle_arr{ };
             rby_team   team_1_arr = team1.to_array();
             rby_team   team_2_arr = team2.to_array();
 
-            std::copy_n(team_1_arr.begin(), team_1_arr.size(), battle_arr.begin());
-            std::copy_n(team_2_arr.begin(), team_2_arr.size(), battle_arr.begin() + 184);
+            std::copy_n(team_1_arr.begin(), team_1_arr.size(), std::begin(battle_.bytes));
+            std::copy_n(team_2_arr.begin(), team_2_arr.size(), std::begin(battle_.bytes) + 184);
+
+            // TODO fill with all values
 
             // last_selected_indexes
-            battle_arr[375] = 1;
+            battle_.bytes[375] = 1;
 
             for(int i = 0; i < 8; ++i)
             {
-                battle_arr[376 + i] = seed >> 8 * i; 
+                battle_.bytes[376 + i] = seed >> 8 * i;
             }
-
-            pkmn_gen1_battle poke_battle;
-            std::copy(battle_arr.begin(), battle_arr.end(), battle_.bytes);
         }
 
         void init() { pkmn_psrng_init(&random, seed); }

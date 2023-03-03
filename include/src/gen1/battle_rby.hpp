@@ -44,6 +44,8 @@ namespace RBY
         std::array<pkmn_choice, 9> options{ };
 
         Battle() = delete;
+        constexpr Battle(Team<Gen::RBY> team1, Team<Gen::RBY> team2)
+        : Battle(team1, team2, random_seed()){}
         constexpr Battle(Team<Gen::RBY> team1, Team<Gen::RBY> team2, std::uint64_t seed)
         : seed(seed)
         {
@@ -68,6 +70,11 @@ namespace RBY
             {
                 battle_.bytes[376 + i] = seed >> 8 * i;
             }
+        }
+
+        constexpr std::uint64_t random_seed()
+        {
+            return 20;
         }
 
         void init() { pkmn_psrng_init(&random, seed); }

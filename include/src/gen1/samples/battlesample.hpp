@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "teamsample.hpp"
+#include "sidesample.hpp"
 #include "battle_rby.hpp"
 
 /*

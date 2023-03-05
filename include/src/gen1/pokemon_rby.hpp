@@ -6,7 +6,6 @@
 #pragma once
 
 #include "base_stats.hpp"
-#include "pokemon.hpp"
 #include "move.hpp"
 #include "species.hpp"
 #include "types.hpp"

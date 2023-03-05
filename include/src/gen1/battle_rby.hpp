@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <bit>
 #include <cassert>
 #include <iostream>
 
@@ -12,7 +13,28 @@
 
 #include "pkmn.h"
 
-#include "team_rby.hpp"
+#include "side_rby.hpp"
+
+// braindamage or genius???
+
+// defines a function FUNC that returns the value of 
+// state.bytes[START] interpreted as type TYPE
+#define SINGLEVIEW(FUNC, TYPE, START) \
+    inline constexpr TYPE FUNC(pkmn_gen1_battle& state) \
+    { \
+        return *std::bit_cast<TYPE*>(state.bytes + START); \
+    } \
+
+// returns iterators as SLICE struct beginning with FROM
+// and ending with TO
+#define SLICE(FUNC, FROM, TO) \
+    inline constexpr Slice FUNC(pkmn_gen1_battle& state) \
+    { \
+        Slice side; \
+        side.first = state.bytes; \
+        side.last  = state.bytes + 184; \
+        return side; \
+    } \
 
 namespace engine
 {
@@ -40,11 +62,11 @@ namespace RBY
         // choice options
         std::array<pkmn_choice, 9> options{ 0 };
 
-        constexpr Battle(Team<Gen::RBY> team1, Team<Gen::RBY> team2, std::uint64_t seed)
+        constexpr Battle(Side<Gen::RBY> side1, Side<Gen::RBY> side2, std::uint64_t seed)
         : seed(seed)
         {
-            std::copy_n(team1.begin(), team1.size(), std::begin(battle_.bytes));
-            std::copy_n(team2.begin(), team2.size(), std::begin(battle_.bytes) + 184);
+            std::copy_n(side1.begin(), side1.size(), std::begin(battle_.bytes));
+            std::copy_n(side2.begin(), side2.size(), std::begin(battle_.bytes) + 184);
 
             // turn
             battle_.bytes[368] = 0;
@@ -64,6 +86,7 @@ namespace RBY
             }
         }
 
+        // can not be constexpr and has to be called when necessary
         void init() { pkmn_psrng_init(&random, seed); }
         // TODO
         pkmn_choice choose(
@@ -78,7 +101,6 @@ namespace RBY
             // battle contains Pokémon with a combination of Transform, Mirror Move/Metronome, and Disable
             // its possible that there are no available choices (softlock), though this is impossible here
             // given that our example battle involves none of these moves
-            assert(n > 0);
             // pkmn_gen1_battle_choices determines what the possible options are - the simplest way to
             // choose an option here is to just use the PSRNG to pick one at random
             return options[(uint64_t)pkmn_psrng_next(random) * n / 0x100000000];
@@ -115,46 +137,12 @@ namespace RBY
 
     using Slice = ArraySlice<std::uint8_t*>;
 
-    inline constexpr Slice team1(pkmn_gen1_battle& state)
-    {
-        Slice team;
-        team.first = state.bytes;
-        team.last  = state.bytes + 184;
-
-        return team;
-    }
-
-    inline constexpr Slice active1(pkmn_gen1_battle& state)
-    {
-        Slice active;
-        active.first = state.bytes + 144;
-        active.last  = state.bytes + 176;
-
-        return active;
-    }
-
-    inline constexpr Slice team2(pkmn_gen1_battle& state)
-    {
-        Slice team;
-        team.first = state.bytes + 184;
-        team.last  = state.bytes + 368;
-
-        return team;
-    }
-
-    inline constexpr Slice active2(pkmn_gen1_battle& state)
-    {
-        Slice active;
-        active.first = state.bytes + 328;
-        active.last  = state.bytes + 360;
-
-        return active;
-    }
+    SLICE(side1, 0, 184)
+    SLICE(active1, 144, 176)
+    SLICE(side2, 184, 368)
+    SLICE(active2, 328, 360)
     
-    inline constexpr std::uint16_t turn(pkmn_gen1_battle& state)
-    {
-        return *(reinterpret_cast<std::uint16_t*>(state.bytes + 368));
-    }
+    SINGLEVIEW(turn, std::uint16_t, 368)
 
     inline void print_result(pkmn_gen1_battle& battle, pkmn_result result)
     {
@@ -188,3 +176,5 @@ namespace RBY
     }
 } // namespace RBY
 } // namespace engine
+#undef SINGLEVIEW
+#undef SLICE

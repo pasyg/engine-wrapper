@@ -7,7 +7,6 @@
 
 #include <algorithm>
 
-#include "team.hpp"
 #include "pokemon_rby.hpp"
 
 namespace engine
@@ -15,16 +14,17 @@ namespace engine
 namespace RBY
 {
     template<Gen gen>
-    struct Team;
+    struct Side;
     
     template<>
-    struct Team<Gen::RBY>
+    struct Side<Gen::RBY>
     {
         // Array that stores all the information of one Team
         std::array<std::uint8_t, 184> bytes{ 0 };
 
-        constexpr Team(const std::array<Pokemon<Gen::RBY>, 6>& pmember)
+        constexpr Side(const std::array<Pokemon<Gen::RBY>, 6>& pmember)
         {
+            // braindamage or genius???
             for(int i = 0; i < 24; ++i)
             {
                 *(bytes.begin() + i)        = *(pmember[0].bytes.begin() + i);

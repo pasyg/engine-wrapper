@@ -26,7 +26,7 @@ namespace RBY
         // Array that stores all the information of one Pokemon
         std::array<std::uint8_t, 24> bytes{ };
 
-        constexpr Pokemon(RBY::Species p_species, std::array<RBY::Move, 4> p_moves, int p_level=100)
+        constexpr Pokemon(Species p_species, std::array<Move, 4> p_moves, int p_level=100)
         {
             bytes[20]   = 0; // status
             bytes[21]   = p_species;
@@ -34,16 +34,16 @@ namespace RBY
             
             base = get_base_stats(bytes[21]);
 
-            bytes[22] = RBY::get_type(p_species)[0] | (RBY::get_type(p_species)[1] << 4);
+            bytes[22] = get_type(p_species)[0] | (get_type(p_species)[1] << 4);
 
             bytes[10] = p_moves[0];
-            bytes[11] = RBY::move_pp(p_moves[0]);
+            bytes[11] = move_pp(p_moves[0]);
             bytes[12] = p_moves[1];
-            bytes[13] = RBY::move_pp(p_moves[1]);
+            bytes[13] = move_pp(p_moves[1]);
             bytes[14] = p_moves[2];
-            bytes[15] = RBY::move_pp(p_moves[2]);
+            bytes[15] = move_pp(p_moves[2]);
             bytes[16] = p_moves[3];
-            bytes[17] = RBY::move_pp(p_moves[3]);
+            bytes[17] = move_pp(p_moves[3]);
 
             calc_stats();
         }

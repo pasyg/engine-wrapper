@@ -58,5 +58,7 @@ namespace RBY
             return bytes.size();
         }
     };
+    // typedef within RBY namespace
+    using rby_side = Side<Gen::RBY>;
 } // namespace RBY
 } // namespace engine

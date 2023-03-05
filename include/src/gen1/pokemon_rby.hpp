@@ -86,6 +86,8 @@ namespace RBY
         std::array<int, 6> EV{ 63, 63, 63, 63, 63, 63 };
         std::array<int, 6> IV{ 15, 15, 15, 15, 15, 15 };
     };
+    // typedef within RBY namespace
+    using rby_poke = Pokemon<Gen::RBY>;
 
     inline constexpr std::uint16_t calc_hp(Pokemon<Gen::RBY>& poke)
     {

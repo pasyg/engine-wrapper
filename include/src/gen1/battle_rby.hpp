@@ -134,6 +134,8 @@ namespace RBY
             return result;
         }
     };
+    // typedef within RBY namespace
+    using rby_battle = Battle<Gen::RBY>;
 
     using Slice = ArraySlice<std::uint8_t*>;
 
